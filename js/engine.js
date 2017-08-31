@@ -108,8 +108,43 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
+        
+        // 游戏终止状态绘制以及重新开始
+        if (player.lives === 0) {
+            // 玩家生命数量耗尽
+            ctx.font = '46pt Impact';
+            ctx.globalAlpha = 0.4;            
+            ctx.fillStyle = 'black';
+            ctx.fillRect(75, 200, 350, 200);
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = 'white'; 
+            ctx.fillText('You Lost!', 153, 285);
+            ctx.strokeStyle="black";
+            ctx.lineWidtn= 1;
+            ctx.strokeText('You Lost!', 153, 285);            
+            ctx.font = '18pt Helvetica';
+            ctx.fillStyle = 'yellow';
+            ctx.fillText('Press "SPACE" to Try Again.', 105, 350);
 
-        renderEntities();
+        } else if (player.level === config.totallevel) {
+            // 游戏通关
+            ctx.font = '46pt Impact';
+            ctx.globalAlpha = 0.4;
+            ctx.fillStyle = 'black';
+            ctx.fillRect(78, 200, 350, 200);
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = 'yellow';
+            ctx.fillStyle = 'red'; 
+            ctx.fillText('YOU WIN!', 153, 285);
+            ctx.strokeStyle="black";
+            ctx.lineWidtn= 1;
+            ctx.strokeText('YOU WIN!', 153, 285)
+            ctx.font = '18pt Helvetica';
+            ctx.fillStyle = 'yellow';
+            ctx.fillText('Press "SPACE" to Play Again.', 105, 350);
+        } else {
+            renderEntities();
+        }
     }
 
     /* 这个函数会在每个时间间隙被 render 函数调用。他的目的是分别调用你在 enemy 和 player
@@ -117,10 +152,15 @@ var Engine = (function(global) {
      */
     function renderEntities() {
         /* 遍历在 allEnemies 数组中存放的作于对象然后调用你事先定义的 render 函数 */
+        // 绘制敌人
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
+        // 绘制石头
+        allRocks.forEach(function(rock) {
+            rock.render();
+        });
+        // 绘制玩家
         player.render();
     }
 
@@ -133,14 +173,18 @@ var Engine = (function(global) {
     }
 
     /* 紧接着我们来加载我们知道的需要来绘制我们游戏关卡的图片。然后把 init 方法设置为回调函数。
-     * 那么党这些图片都已经加载完毕的时候游戏就会开始。
+     * 那么当这些图片都已经加载完毕的时候游戏就会开始。
      */
     Resources.load([
         'images/stone-block.png',
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-princess-girl.png',
+        'images/Heart.png',
+        'images/Rock.png'
     ]);
     Resources.onReady(init);
 
